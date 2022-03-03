@@ -5,13 +5,14 @@ const repoList = document.querySelector(".repo-list");
 const sctRepos = document.querySelector("section.repos");
 const sctRepoData = document.querySelector("section.repo-data");
 
+const btnViewRepos = document.querySelector(".view-repos");
+const txtFilterRepos = document.querySelector(".filter-repos");
+
 const getMyData = async function () {
     const link = await fetch(`https://api.github.com/users/${username}`);
     const myData = await link.json();
 
     readMyData(myData);
-
-//    console.log(repos)
 }
 
 const readMyData = function (data) {
@@ -70,6 +71,7 @@ const displayThisRepo = function (repoInfo, languages) {
     div.innerHTML = str;
     sctRepos.classList.add("hide");
     sctRepoData.classList.remove("hide");
+    btnViewRepos.classList.remove("hide");
     sctRepoData.append(div);
 
 };
@@ -87,6 +89,24 @@ repoList.addEventListener("click", function (e) {
     }
 })
 
+btnViewRepos.addEventListener("click", function () {
+    sctRepos.classList.remove("hide");
+    sctRepoData.classList.add("hide");
+    btnViewRepos.classList.add("hide");
+})
 
-
+txtFilterRepos.addEventListener("input", function (e) {
+    const searchText = e.target.value.toLowerCase();
+    const repos = document.querySelectorAll(".repo");
+    
+    for (let repo of repos) {
+        const liRepo = repo.innerText.toLowerCase();
+        let find = new RegExp(searchText);
+        if (liRepo.match(find) === null) {
+            repo.classList.add("hide");
+        } else {
+            repo.classList.remove("hide");
+        }
+    }
+})
 
